@@ -1,0 +1,24 @@
+{
+  "name": "releases",
+  "version": "1.0.0",
+  "description": "\"The queue mmque client write by javascript.\"",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zdy23216340/mmque-client-js.git"
+  },
+  "keywords": [
+    "mmque",
+    "js",
+    "client"
+  ],
+  "author": "Gary",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zdy23216340/mmque-client-js/issues"
+  },
+  "homepage": "https://github.com/zdy23216340/mmque-client-js#readme"
+}
