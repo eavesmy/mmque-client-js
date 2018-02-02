@@ -1,11 +1,19 @@
 const net = require("net");
 const models = require("./models");
 
+function connection(port, host) {
+    return net.createConnection(port, host)
+}
+
 var Client = function(options) {
 
     this.target_host = options.host;
     this.target_port = options.port;
-    this._client = net.createConnection(this.target_port, this.target_host);
+
+	this.reConnectCount = 0;
+    this._client = connection(this.target_port, this.target_host);
+
+    this.keepAlive = options.keepAlive ? this.KeepAlive() : false;
 
     this._client.on("end", () => console.log("Mmque connection down"));
 }
@@ -13,6 +21,38 @@ var Client = function(options) {
 // Client.prototype.Write = function(data){
 // this._client.write(data);
 // }
+
+Client.prototype.ReConnect = function(){
+	this._client = null;
+
+	if(this.reConnectCount >= 50) return;
+
+	this._client = connection(this.target_port,this.target_host);
+}
+
+Client.prototype.KeepAlive = function() {
+
+    let that = this;
+    let buf = Buffer.alloc(2).fill();
+    buf.writeInt16BE(-1, 0);
+
+    function send() {
+        that._client.write(buf);
+    }
+
+    return setInterval(send, 5000);
+}
+
+Client.prototype.Close = function() {
+
+    clearInterval(thi.keepAlive);
+
+    this._client.end();
+}
+
+Client.prototype.Error = function(fn) {
+    this._client.on("error", fn);
+}
 
 Client.prototype.Receive = function(fn) {
     this._client.on("data", fn);

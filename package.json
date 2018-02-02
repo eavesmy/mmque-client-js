@@ -1,5 +1,5 @@
 {
-  "name": "releases",
+  "name": "mmque-client-js",
   "version": "1.0.0",
   "description": "\"The queue mmque client write by javascript.\"",
   "main": "app.js",
@@ -15,7 +15,7 @@
     "js",
     "client"
   ],
-  "author": "Gary",
+  "author": "Gary Zhang",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/zdy23216340/mmque-client-js/issues"
