@@ -1,20 +1,20 @@
 const Data = {};
 
-Data.id = 5;
+Data.id = 2;
 
 Data.Struct = {
     len: Number,
-    Channal: String
-};
+    Channal: String,
+    Version: Number,
+}
 
 Data.Pack = function(pack) {
 
-    pack.len = Buffer.from(pack.Channal).length + 2;
+    pack.len = Buffer.from(pack.Channal).length + 2 + 2;
 
     let buf = Buffer.alloc(pack.len + 4).fill();
 
     let index = 0;
-
     buf.writeInt16BE(Data.id, index);
     index += 2;
 
@@ -25,6 +25,9 @@ Data.Pack = function(pack) {
     index += 2;
 
     buf.write(pack.Channal, index, "utf8");
+    index += Buffer.from(pack.Channal).length;
+
+    buf.writeInt16BE(pack.Version, index);
 
     return buf;
 }

@@ -74,18 +74,28 @@ Client.prototype.Push = function(pack) {
     let buf = models.Push.Pack(o);
 
     this._client.write(buf);
-}
+};
 
-Client.prototype.Pull = function(pack) {
+Client.prototype.QueryOne = function(pack) {
 
-    let o = Object.assign({}, models.Pull.Struct);
+    let o = Object.assign({}, models.QueryOne.Struct);
 
     o.Channal = pack.Channal;
     o.Version = pack.Version;
 
-    let buf = models.Pull.Pack(o);
+    let buf = models.QueryOne.Pack(o);
 
     this._client.write(buf);
+};
+
+Client.prototype.Pull = function(pack){
+
+	let o = Object.assign({},models.Pull.Struct)
+	o.Channal = pack.Channal;
+
+	let buf = models.Pull.Pack(o);
+
+	this._client.write(buf);
 }
 
 Client.prototype.Ack = function(pack) {
@@ -98,7 +108,7 @@ Client.prototype.Ack = function(pack) {
     let buf = models.Ack.Pack(o);
 
     this._client.write(buf);
-}
+};
 
 Client.prototype.NewVersion = function(pack){
 	let o = Object.assign({},models.Version.Struct);
@@ -108,6 +118,6 @@ Client.prototype.NewVersion = function(pack){
 	let buf = models.Version.Pack(o);
 
 	this._client.write(buf)
-}
+};
 
 module.exports = Client;
