@@ -25,7 +25,7 @@ var Client = function(options) {
 Client.prototype.ReConnect = function(){
 	this._client = null;
 
-	if(this.reConnectCount >= 10) return;
+	if(this.reConnectCount >= 5) return;
 
 	this._client = connection(this.target_port,this.target_host);
 }
