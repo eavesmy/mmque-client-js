@@ -98,7 +98,16 @@ Client.prototype.Ack = function(pack) {
     let buf = models.Ack.Pack(o);
 
     this._client.write(buf);
+}
 
+Client.prototype.NewVersion = function(pack){
+	let o = Object.assign({},models.Version.Struct);
+
+	o.Channal = pack.Channal;
+
+	let buf = models.Version.Pack(o);
+
+	this._client.write(buf)
 }
 
 module.exports = Client;

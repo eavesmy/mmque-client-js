@@ -13,8 +13,9 @@ let client = new Client({
     port: 8081
 });
 
-client.Error(error => console.log(error))
+client.NewVersion({Channal:"BBB"})
 
+client.Error(error => console.log(error))
 /*
 client.Pull({
     Channal: "test",
