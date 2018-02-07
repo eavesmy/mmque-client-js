@@ -116,8 +116,6 @@ Client.prototype.Pull = function(pack) {
 
     let buf = models.Pull.Pack(o);
 
-    console.log(String(buf));
-
     this._client.write(buf);
 }
 
