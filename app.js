@@ -55,7 +55,16 @@ Client.prototype.Close = function() {
 
 Client.prototype.Receive = function(fn) {
 
-    this._client.on("data", fn);
+    this._client.on("data", data => {
+        try {
+            data = String(data);
+            data = JSON.parse(data);
+        } catch (e) {
+            return
+        }
+
+        fn(data)
+    });
 
     return this;
 };
