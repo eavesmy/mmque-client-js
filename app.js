@@ -10,7 +10,7 @@ var Client = function(options) {
     this.target_host = options.host;
     this.target_port = options.port;
 
-	this.reConnectCount = 0;
+    this.reConnectCount = 0;
     this._client = connection(this.target_port, this.target_host);
 
     this.keepAlive = options.keepAlive ? this.KeepAlive() : false;
@@ -22,12 +22,15 @@ var Client = function(options) {
 // this._client.write(data);
 // }
 
-Client.prototype.ReConnect = function(){
-	this._client = null;
+Client.prototype.ReConnect = function() {
 
-	if(this.reConnectCount >= 5) return;
+    this.reConnectCount++;
+    this._client = null;
+    this.errorCount = 0;
 
-	this._client = connection(this.target_port,this.target_host);
+    if (this.reConnectCount >= 5) return;
+
+    this._client = connection(this.target_port, this.target_host);
 }
 
 Client.prototype.KeepAlive = function() {
@@ -45,23 +48,31 @@ Client.prototype.KeepAlive = function() {
 
 Client.prototype.Close = function() {
 
-    clearInterval(thi.keepAlive);
+    clearInterval(this.keepAlive);
 
     this._client.end();
 }
 
-Client.prototype.Error = function(fn) {
-    this._client.on("error", fn);
-}
-
 Client.prototype.Receive = function(fn) {
+
     this._client.on("data", fn);
-}
+
+    return this;
+};
 
 Client.prototype.Error = function(fn) {
+
     let that = this;
-    that._client.on("error", fn);
-}
+
+    this._client.on("error", err => {
+        // that.ReConnect();
+        that.errorCount++;
+
+        fn(err);
+    });
+
+    return this;
+};
 
 Client.prototype.Push = function(pack) {
 
@@ -88,14 +99,16 @@ Client.prototype.QueryOne = function(pack) {
     this._client.write(buf);
 };
 
-Client.prototype.Pull = function(pack){
+Client.prototype.Pull = function(pack) {
 
-	let o = Object.assign({},models.Pull.Struct)
-	o.Channal = pack.Channal;
+    let o = Object.assign({}, models.Pull.Struct)
+    o.Channal = pack.Channal;
 
-	let buf = models.Pull.Pack(o);
+    let buf = models.Pull.Pack(o);
 
-	this._client.write(buf);
+    console.log(String(buf));
+
+    this._client.write(buf);
 }
 
 Client.prototype.Ack = function(pack) {
@@ -110,14 +123,14 @@ Client.prototype.Ack = function(pack) {
     this._client.write(buf);
 };
 
-Client.prototype.NewVersion = function(pack){
-	let o = Object.assign({},models.Version.Struct);
+Client.prototype.NewVersion = function(pack) {
+    let o = Object.assign({}, models.Version.Struct);
 
-	o.Channal = pack.Channal;
+    o.Channal = pack.Channal;
 
-	let buf = models.Version.Pack(o);
+    let buf = models.Version.Pack(o);
 
-	this._client.write(buf)
+    this._client.write(buf)
 };
 
 module.exports = Client;
